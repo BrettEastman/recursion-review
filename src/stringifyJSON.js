@@ -22,6 +22,9 @@ var stringifyJSON = function(obj) {
   }
   // if array
   if (Array.isArray(obj)) {
+    if (obj.length === 0) {
+      return '[]';
+    }
     // declare string var
     // concatenate string with single bracket
     var string = '[';
@@ -39,13 +42,21 @@ var stringifyJSON = function(obj) {
   }
   // if object
   if (typeof(obj) === 'object' && !Array.isArray(obj)) {
+    if (Object.keys(obj).length === 0) {
+      return '{}';
+    }
     // declare string var
     // opening curly brace
     var string = '{';
     // for in loop to visit each
     for (var key in obj) {
-      // stringifyJSON.key + stringifyJSON.object[key], then comma
-      string += stringifyJSON(key) + ':' + stringifyJSON(obj[key]) + ',';
+      if (obj[key] !== undefined && typeof(obj[key]) !== 'function') {
+        // stringifyJSON.key + stringifyJSON.object[key], then comma
+        string += stringifyJSON(key) + ':' + stringifyJSON(obj[key]) + ',';
+      }
+    }
+    if (string.length === 1) {
+      return '{}';
     }
     // copy slice string 0 -1
     var copy = string.slice(0, -1);
